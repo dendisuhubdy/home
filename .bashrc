@@ -141,20 +141,21 @@ if [[ `hostname` == 'fraptop' || `hostname` == 'nvidia-robotica' || `hostname` =
     export CUDA_ROOT=/usr/local/cuda/
 
     # texlive path
-    export PATH=/usr/local/texlive/2016/bin/x86_64-linux${PATH:+:${PATH}}
-    export INFOPATH=/usr/local/texlive/2016/texmf-dist/doc/info
+    # export PATH=/usr/local/texlive/2016/bin/x86_64-linux${PATH:+:${PATH}}
+    # export INFOPATH=/usr/local/texlive/2016/texmf-dist/doc/info
 
     # Set TMP
     export TMP='/tmp'
     export TMPDIR='/tmp'
 
     # PATHS
-    export BLOCKS_DATA_PATH='/home/francesco/exp/datasets'
-    export FUEL_DATA_PATH='/home/francesco/exp/datasets'
+    # export BLOCKS_DATA_PATH='/home/francesco/exp/datasets'
+    # export FUEL_DATA_PATH='/home/francesco/exp/datasets'
 
     # LC
     export LC_CTYPE=en_US.UTF-8
     export LC_ALL=en_US.UTF-8
+
 
 ################################### HELIOS ####################################
 elif [[ `dnsdomainname` == "helios" ]]; then
@@ -217,7 +218,7 @@ elif [[ `hostname -d` == 'iro.umontreal.ca' ]] ; then
     export FUEL_DATA_PATH='/data/lisa/data'
 
     # I'd rather not use the PYTHONPATH, opting for my own conda installation.
-    unset PYTHONPATH
+    # unset PYTHONPATH
     
     # Fred's up-to-date Firefox install. Use the directory that appears
     # alphabetically last, which hopefully should always be the most recent.
@@ -306,7 +307,7 @@ IGNOREEOF=10   # Shell only exists after the 10th consecutive Ctrl-d
 
 # PATHS
 #=======
-export PYTHONPATH_INIT="$PYTHONPATH"
+# export PYTHONPATH_INIT="$PYTHONPATH"
 export PATH=$HOME/.local/bin:${PATH:+:${PATH}}
 export PATH_INIT="$PATH"
 
@@ -318,6 +319,37 @@ export THEANO_FLAGS_INIT="$THEANO_FLAGS"
 export LD_LIBRARY_PATH=$HOME/.local/lib64/:$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export LIBRARY_PATH=$HOME/.local/lib64/:$HOME/.local/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}
 export CPATH=$HOME/.local/include${CPATH:+:${CPATH}}
+
+export PYTHONPATH=$HOME/research/frameworks/tvm/python:${PYTHONPATH}
+
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.local/lib
+export PATH=$PATH:~/.local/lib64
+export PATH=$PATH:~/.local/include
+export PATH=$PATH:/opt/lisa/os_v5/cudnn_v6
+export PATH=$PATH:/usr/local/cuda/
+export PATH=$PATH:/data/lisatmp3/suhubdyd/
+export PATH=$PATH:/data/lisatmp4/suhubdyd/
+
+export CPATH=$CPATH:~/.local/include
+export CPATH=$CPATH:/usr/local/cuda/include
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/usr/local/cuda/include
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:~/.local/include
+
+export LIBRARY_PATH=$LIBRARY_PATH:~/.local/lib
+export LIBRARY_PATH=$LIBRARY_PATH:~/.local/lib64
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.local/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.local/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-7.5/lib64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/
+
+export CUDA_HOME=/usr/local/cuda/
+export MILA_BOT_DIR=/data/lisatmp4/alexa/
+
+umask 0002
 
 # OTHERS
 #========

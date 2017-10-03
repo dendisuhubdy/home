@@ -37,44 +37,45 @@ alias sshpw='ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no
 # Force 256 colors tmux
 alias tmux="TERM=xterm-256color tmux"
 
-alias python_no_tcmalloc="/usr/bin/python"
-python() {
-    if [[ -f /usr/local/lib/libtcmalloc.so.4 ]]; then
-        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
-        msg=$msg"to use the default python instead.\n"
-        echo -e $msg
-        LD_PRELOAD=/usr/local/lib/libtcmalloc.so.4 /usr/bin/python "$@"
-    elif [[ -f /usr/lib/libtcmalloc.so.4 ]]; then
-        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
-        msg=$msg"to use the default python instead.\n"
-        echo -e $msg
-        LD_PRELOAD=/usr/lib/libtcmalloc.so.4 /usr/bin/python "$@"
-    elif [[ -f $HOME/.local/lib/libtcmalloc.so.4 ]]; then
-        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
-        msg=$msg"to use the default python instead.\n"
-        echo -e $msg
-        LD_PRELOAD=$HOME/.local/lib/libtcmalloc.so.4 /usr/bin/python "$@"
-    else
-        /usr/bin/python "$@"
-    fi
-}
+
+# alias python_no_tcmalloc="/usr/bin/python"
+#python() {
+#    if [[ -f /usr/local/lib/libtcmalloc.so.4 ]]; then
+#        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
+#        msg=$msg"to use the default python instead.\n"
+#        echo -e $msg
+#        LD_PRELOAD=/usr/local/lib/libtcmalloc.so.4 /usr/bin/python "$@"
+#    elif [[ -f /usr/lib/libtcmalloc.so.4 ]]; then
+#        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
+#        msg=$msg"to use the default python instead.\n"
+#        echo -e $msg
+#        LD_PRELOAD=/usr/lib/libtcmalloc.so.4 /usr/bin/python "$@"
+#    elif [[ -f $HOME/.local/lib/libtcmalloc.so.4 ]]; then
+#        msg="WARNING:Using Google's malloc.\nCall python_no_tcmalloc "
+#        msg=$msg"to use the default python instead.\n"
+#        echo -e $msg
+#        LD_PRELOAD=$HOME/.local/lib/libtcmalloc.so.4 /usr/bin/python "$@"
+#    else
+#        /usr/bin/python "$@"
+#    fi
+#}
 
 # Montreal
 lisa() {
     if [ $# == 0 ]; then
-        sshpass -f ~/.lisa ssh -YC visin@elisa1
+        sshpass -f ~/.lisa ssh -YC suhubdyd@elisa3
     elif [ $# == 1 ]; then
-        sshpass -f ~/.lisa ssh -YC -L $1:localhost:$1 visin@elisa1
+        sshpass -f ~/.lisa ssh -YC -L $1:localhost:$1 suhubdyd@elisa3
     else
         echo "usage: sshlisa [port]"
     fi
 }
 alias lisassh=lisa
 lisascp() {
-    sshpass -f ~/.lisa scp -Cr visin@elisa1.iro.umontreal.ca:$1 $2
+    sshpass -f ~/.lisa scp -Cr suhubdyd@elisa3.iro.umontreal.ca:$1 $2
 }
 lisarsync() {
-    sshpass -f ~/.lisa rsync -a -X --partial -h --progress --copy-links visin@elisa1.iro.umontreal.ca:$1 $2
+    sshpass -f ~/.lisa rsync -a -X --partial -h --progress --copy-links suhubdyd@elisa3.iro.umontreal.ca:$1 $2
 }
 alias squeue='squeue -o "%.6i %.1t %.6q %.7m %.12b %.3C %.3D %.18k %.11L %R"'
 
@@ -151,9 +152,9 @@ PROFILE(){ export CUDA_LAUNCH_BLOCKING=1;export THEANO_FLAGS="$THEANO_FLAGS_INIT
 PL(){ export THEANO_FLAGS="$THEANO_FLAGS",dnn.conv.algo_bwd_filter=time_once,dnn.conv.algo_bwd_data=time_once,optimizer_excluding=local_softmax_dnn_grad; }
 TF(){ echo $THEANO_FLAGS; }
 TEN() {
-    export LIBRARY_PATH=:/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/lib:/Tmp/lisa/os_v5/lib64:/usr/local/lib:/usr/lib64/atlas/::/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/Tmp/lisa/os_v5/lib32:/u/visin/.local/lib/libgpuarray/lib64/:/u/visin/.local/lib/libgpuarray/lib
-    export LD_LIBRARY_PATH=/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/lib:/Tmp/lisa/os_v5/lib64:/usr/local/lib:/usr/lib64/atlas/::/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/Tmp/lisa/os_v5/lib32:/u/visin/.local/lib/libgpuarray/lib64/:/u/visin/.local/lib/libgpuarray/lib
-    export CPATH=/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/include::/u/visin/.local/lib/libgpuarray/include
+    export LIBRARY_PATH=:/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/lib:/Tmp/lisa/os_v5/lib64:/usr/local/lib:/usr/lib64/atlas/::/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/Tmp/lisa/os_v5/lib32:/u/suhubdyd/.local/lib/libgpuarray/lib64/:/u/suhubdyd/.local/lib/libgpuarray/lib
+    export LD_LIBRARY_PATH=/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/lib:/Tmp/lisa/os_v5/lib64:/usr/local/lib:/usr/lib64/atlas/::/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/usr/local/cuda/lib/:/usr/local/cuda/lib64/:/Tmp/lisa/os_v5/lib32:/u/suhubdyd/.local/lib/libgpuarray/lib64/:/u/suhubdyd/.local/lib/libgpuarray/lib
+    export CPATH=/Tmp/lisa/os_v5/cudnn_v4:/Tmp/lisa/os_v5/include::/u/suhubdyd/.local/lib/libgpuarray/include
 }
 CVD_CLR(){ export CUDA_VISIBLE_DEVICES=''; }
 CVD0(){ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:+${CUDA_VISIBLE_DEVICES},}0; }
@@ -173,7 +174,7 @@ D12(){ export DISPLAY=localhost:12.0; }
 
 # Frameworks update
 # ==================
-GITUSER='fvisin'
+GITUSER='dendisuhubdy'
 # theano
 uptheano() {
     currdir=`pwd`
@@ -272,39 +273,39 @@ upconda() {
 
 # ENVIRONMENTS
 # =============
-BL() {
-    export VIRTUAL_ENV="$HOME/.miniconda/envs/blocks"
-    export PATH="$HOME/.miniconda/bin:$PATH"
-    # export PYTHONPATH="$HOME/.miniconda/envs/blocks/lib/python2.7/site-packages/:$PYTHONPATH"
-    source activate blocks
-}
-AR() {
-    export VIRTUAL_ENV="$HOME/.miniconda/envs/arctic"
-    export PATH="$HOME/.miniconda/bin:$PATH"
-    # export PYTHONPATH="$HOME/.miniconda/envs/arctic/lib/python2.7/site-packages/:$PYTHONPATH"
-    source activate arctic
-}
-TH() {
-    echo "Resetting THEANO_FLAGS, PYTHONPATH and PATH ..."
-    CLR
-    export PATH=$PATH:"/data/lisa/exp/visin/theano/theano/bin"
-    # export PYTHONPATH=$PYTHONPATH:"/data/lisa/exp/visin/theano/theano/"
-}
-CLR() {
-    if [ ! -z $CONDA_DEFAULT_ENV ]; then
-        source ~/.miniconda/bin/deactivate 
-    fi
-    export THEANO_FLAGS="$THEANO_FLAGS_INIT"
-    export PYTHONPATH="$PYTHONPATH_INIT"
-    export PATH="$PATH_INIT"
-    unset VIRTUAL_ENV
-}
+#BL() {
+#    export VIRTUAL_ENV="$HOME/.miniconda/envs/blocks"
+#    export PATH="$HOME/.miniconda/bin:$PATH"
+#    # export PYTHONPATH="$HOME/.miniconda/envs/blocks/lib/python2.7/site-packages/:$PYTHONPATH"
+#    source activate blocks
+#}
+#AR() {
+#    export VIRTUAL_ENV="$HOME/.miniconda/envs/arctic"
+#    export PATH="$HOME/.miniconda/bin:$PATH"
+#    # export PYTHONPATH="$HOME/.miniconda/envs/arctic/lib/python2.7/site-packages/:$PYTHONPATH"
+#    source activate arctic
+#}
+#TH() {
+#    echo "Resetting THEANO_FLAGS, PYTHONPATH and PATH ..."
+#    CLR
+#    export PATH=$PATH:"/data/lisa/exp/visin/theano/theano/bin"
+#    # export PYTHONPATH=$PYTHONPATH:"/data/lisa/exp/visin/theano/theano/"
+#}
+#CLR() {
+#    if [ ! -z $CONDA_DEFAULT_ENV ]; then
+#        source ~/.miniconda/bin/deactivate 
+#    fi
+#    export THEANO_FLAGS="$THEANO_FLAGS_INIT"
+#    export PYTHONPATH="$PYTHONPATH_INIT"
+#    export PATH="$PATH_INIT"
+#    unset VIRTUAL_ENV
+#}
 
 export -f uptheano
 export -f upblocks
 export -f uparctic
-export -f BL
-export -f AR
-export -f CLR
+#export -f BL
+#export -f AR
+#export -f CLR
 export -f TF
 export -f TEN
