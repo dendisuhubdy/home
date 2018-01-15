@@ -1,13 +1,26 @@
-# ls aliases
-alias ls='ls --color=auto'
+# Load GNU aliases for mac
+# Use homebrew's coreutils if possible or the standard command otherwise
+if [ -d "$HOME/.homebrew/Cellar/coreutils" ]; then
+    LATEST_COREUTILS_DIR=$(ls -td -- $HOME/.homebrew/Cellar/coreutils/*/ | head -n 1)
+    if [[ ! -z ${LATEST_COREUTILS_DIR+x} ]] && [[ -d "$LATEST_COREUTILS_DIR" ]]; then
+        export PATH=$PATH:$LATEST_COREUTILS_DIR/bin
+        alias ls='gls --color=auto'
+        alias dircolors=gdircolors
+    fi
+else
+    if [[ `uname -s` == 'Darwin' ]]; then
+        alias ls='ls -G'
+    else
+        alias ls='ls --color=auto'
+    fi
+fi
+
+# Set other ls aliases
 alias ll='ls -l'
 alias lla='ls -alF'
 alias lh='ls -sh'
 alias la='ls -A'
 alias l='ls -CF'
-
-#alias dir='dir --color=auto'
-#alias vdir='vdir --color=auto'
 
 # Colourize grep output.
 alias grep='grep --color=auto'
@@ -20,6 +33,10 @@ command -v colordiff >/dev/null 2>&1 && { alias diff=colordiff; }
 # Graphical vim
 if type vimx >/dev/null 2>&1; then 
     alias vim='vimx'
+    export GIT_EDITOR="vimx"
+elif type mvim >/dev/null 2>&1; then 
+    alias vim='mvim -v'
+    export GIT_EDITOR="mvim -v"
 fi
 
 # Git fast-forward merge
@@ -36,6 +53,8 @@ alias sshpw='ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no
 
 # Force 256 colors tmux
 alias tmux="TERM=xterm-256color tmux"
+#alias tmux="tmux -2"  # Force tmux to use 256 colors
+. $HOME/.tmux/set_tmux_config.sh
 
 
 # alias python_no_tcmalloc="/usr/bin/python"
@@ -59,6 +78,25 @@ alias tmux="TERM=xterm-256color tmux"
 #        /usr/bin/python "$@"
 #    fi
 #}
+
+# Autocomplete ssh names in bash (defined in .ssh/config)
+_complete_ssh_hosts () {
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    comp_ssh_hosts=`cat ~/.ssh/known_hosts | \
+                    cut -f 1 -d ' ' | \
+                    sed -e s/,.*//g | \
+                    grep -v ^# | \
+                    uniq | \
+                    grep -v "\[" ;
+            cat ~/.ssh/config | \
+                    grep "^Host " | \
+                    awk '{print $2}'
+            `
+    COMPREPLY=( $(compgen -W "${comp_ssh_hosts}" -- $cur))
+    return 0
+}
+complete -F _complete_ssh_hosts ssh
 
 # Montreal
 lisa() {
@@ -165,6 +203,7 @@ CVD4(){ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:+${CUDA_VISIBLE_DEVIC
 CVD5(){ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:+${CUDA_VISIBLE_DEVICES},}5; }
 CVD6(){ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:+${CUDA_VISIBLE_DEVICES},}6; }
 CVD7(){ export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:+${CUDA_VISIBLE_DEVICES},}7; }
+CVDNONE(){ export CUDA_VISIBLE_DEVICES=-1; }
 
 # Displays
 D0(){ export DISPLAY=localhost:0.0; }

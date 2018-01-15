@@ -31,3 +31,4 @@ cnmem = 1
 enabled = True
 include_path=/opt/lisa/os_v5/cudnn_v6
 library_path=/opt/lisa/os_v5/cudnn_v6
+library_path=/opt/lisa/os_v5/cudnn_v7

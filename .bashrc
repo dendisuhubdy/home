@@ -2,9 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-# If not running interactively, don't do anything
-# [ -z "$PS1" ] && return
-
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -20,61 +17,8 @@ HISTFILESIZE=50000
 # command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# # set variable identifying the chroot you work in (used in the prompt below)
-# if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-#     debian_chroot=$(cat /etc/debian_chroot)
-# fi
-# 
-# # set a fancy prompt (non-color, unless we know we "want" color)
-# case "$TERM" in
-#     xterm-color) color_prompt=yes;;
-# esac
-# 
-# # uncomment for a colored prompt, if the terminal has the capability; turned
-# # off by default to not distract the user: the focus in a terminal window
-# # should be on the output of commands, not on the prompt
-# #force_color_prompt=yes
-# 
-# if [ -n "$force_color_prompt" ]; then
-#     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-#     # We have color support; assume it's compliant with Ecma-48
-#     # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-#     # a case would tend to support setf rather than setaf.)
-#     color_prompt=yes
-#     else
-#     color_prompt=
-#     fi
-# fi
-# 
-# if [ "$color_prompt" = yes ]; then
-#     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-# else
-#     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-# fi
-# unset color_prompt force_color_prompt
-
-# If this is an gnome-terminal set the title to user@host:dir
-# For konsole, just modify the preferences to print %w
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1" # gnome
-    ;;
-*)
-    ;;
-esac
-
-# # Add an "alert" alias for long running commands.  Use like so:
-# #   sleep 10; alert
-# alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
- 
-# export CUDNN=5
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -89,50 +33,30 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# For some reason with this configuration and set -g default-terminal "xterm" 
-# I can finally see the right colors in tmux at MILA --> MOVED inside MILA!
-# alias tmux="TERM=xterm-256color tmux"
+# Enable 256 color capabilities if dircolors exist
+# (ls --color=auto) will use solarized colors
+hash dircolors 2>/dev/null && eval `dircolors $HOME/.dircolors`
 
-# Enable 256 color capabilities for appropriate terminals
+# enable bash completion in interactive shells
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+ 
+# GIT AUTOCOMPLETE
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f ~/.git-completion.bash ]; then
+    source ~/.git-completion.bash
+fi
 
-# Set this variable in your local shell config if you want remote
-# xterms connecting to this system, to be sent 256 colors.
-# This can be done in /etc/csh.cshrc, or in an earlier profile.d script.
-#   SEND_256_COLORS_TO_REMOTE=1
-
-# Terminals with any of the following set, support 256 colors (and are local)
-# local256="$COLORTERM$XTERM_VERSION$ROXTERM_ID$KONSOLE_DBUS_SESSION"
-# 
-# if [ -n "$local256" ] || [ -n "$SEND_256_COLORS_TO_REMOTE" ]; then
-# 
-#   case "$TERM" in
-#     'xterm') TERM=xterm-256color;;
-#     'screen') TERM=screen-256color;;
-#     'Eterm') TERM=Eterm-256color;;
-#   esac
-#   export TERM
-# 
-#   if [ -n "$TERMCAP" ] && [ "$TERM" = "screen-256color" ]; then
-#     TERMCAP=$(echo "$TERMCAP" | sed -e 's/Co#8/Co#256/g')
-#     export TERMCAP
-#   fi
-# fi
-# unset local256
-eval `dircolors ~/.dircolors`
-# export $(dbus-launch)
-
-################################### LAPTOP ####################################
+################################### LAPTOP/Server poli ####################################
 if [[ `hostname` == 'fraptop' || `hostname` == 'nvidia-robotica' || `hostname` == 'AITeam' ]]; then
 
-    # enable bash completion in interactive shells
-    if ! shopt -oq posix; then
-      if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-      elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
-      fi
-    fi
- 
     # CUDA
     export LD_LIBRARY_PATH=/usr/local/cuda/lib64/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
     export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/lib64/${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -281,29 +205,16 @@ elif [[ `hostname -d` == 'iro.umontreal.ca' ]] ; then
     # LC
     export LC_CTYPE=en_CA.UTF-8
     export LC_ALL=en_CA.UTF-8
+################################### Mac ####################################
+elif [[ `uname -s` == 'Darwin' ]]; then
+    # Homebrew stuff
+    export PATH=$HOME/.homebrew/bin:$PATH 
+    export PATH=$HOME/Library/Python/2.7/bin:$PATH  # pip stuff
+    export LD_LIBRARY_PATH=$HOME/.homebrew/lib:$LD_LIBRARY_PATH
 
+    # Disable homebrew stats
+    export HOMEBREW_NO_ANALYTICS=1
 fi
-
-################################# COMMON POST #################################
-
-if [ -z ${THEANORC+x} ]; then
-    export THEANORC=~/.theanorc
-fi
-
-# GIT AUTOCOMPLETE
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if [ -f ~/.git-completion.bash ]; then
-    source ~/.git-completion.bash
-fi
-
-# Ctrl-D
-IGNOREEOF=10   # Shell only exists after the 10th consecutive Ctrl-d
-
-# export BIBINPUTS=.:$HOME/articles/bib:
-# export BSTINPUTS=.:$HOME/articles/bst:
-# export TEXINPUTS=.:$HOME/articles/sty:
 
 # PATHS
 #=======
@@ -311,14 +222,9 @@ IGNOREEOF=10   # Shell only exists after the 10th consecutive Ctrl-d
 export PATH=$HOME/.local/bin:${PATH:+:${PATH}}
 export PATH_INIT="$PATH"
 
-# THEANO AND LIBGPUARRAY
-#=======================
-export THEANO_FLAGS=$BLAS_FLAG
-export THEANO_FLAGS_INIT="$THEANO_FLAGS"
-# libgpuarray
-export LD_LIBRARY_PATH=$HOME/.local/lib64/:$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-export LIBRARY_PATH=$HOME/.local/lib64/:$HOME/.local/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}
-export CPATH=$HOME/.local/include${CPATH:+:${CPATH}}
+# Set TMP
+export TMP='/tmp'
+export TMPDIR='/tmp'
 
 export PYTHONPATH=$HOME/research/frameworks/tvm/python:${PYTHONPATH}
 
@@ -342,6 +248,7 @@ export LIBRARY_PATH=$LIBRARY_PATH:~/.local/lib64
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.local/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/.local/lib64
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-9.0/lib64/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-8.0/lib64/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-7.5/lib64/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/
@@ -355,8 +262,11 @@ umask 0002
 #========
 export EDITOR=vim
 
+# Ctrl-D
+IGNOREEOF=10   # Shell only exists after the 10th consecutive Ctrl-d
+
 # autojump
-[[ -s /u/visin/.autojump/etc/profile.d/autojump.sh ]] && source /u/visin/.autojump/etc/profile.d/autojump.sh
+[[ -s /u/suhubdyd/.autojump/etc/profile.d/autojump.sh ]] && source /u/suhubdyd/.autojump/etc/profile.d/autojump.sh
 
 # cool bash and git bash extension
 if [ -f ~/.git-prompt.sh ]; then
@@ -437,6 +347,8 @@ fi
 PS1='\[${GREEN}\]┌─────── \u@\h\[${BLUE}\] [\w]\[${YELLOW}\]$(__git_ps1 " (%s)")\n\[${GREEN}\]└─ λ \[${RESET}\]'
 # VIRTUAL_ENV_DISABLE_PROMPT=1 source ~/Enthought/Canopy_64bit/User/bin/activate
 
+# If this is an gnome-terminal set the title to user@host:dir
+# For konsole, just modify the preferences to print %w
 # Set an xterm title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)

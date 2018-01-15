@@ -41,3 +41,8 @@
 
 [log]
  decorate = full
+# Ignore lines with #gitignore
+[filter "gitignore"]
+	clean = "sed '/# gitignore$/'d"
+[filter "gitignore"]
+	smudge = cat
